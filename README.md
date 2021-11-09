@@ -1,7 +1,8 @@
 # Ohjelmistotekniikka
 
-*asdfadsf*
+### Tehtävät
+**Viikko 1**
 
-**asdfasdf**
+[gitlog.txt](https://github.com/msha/ot-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
 
-testi 123
+[komentorivi.txt](https://github.com/msha/ot-harjoitustyo/blob/master/laskarit/viikko1/komentorivi.txt)
