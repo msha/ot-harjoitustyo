@@ -1,9 +1,47 @@
 # WYSIWYG Editori
 
-Sovelluksen avulla käyttäjä voi luoda hmtl-koodia visuaalisen editorin avulla, joka näyttää koodin sellaisena kuin se lopullisessa muodossa tulee olemaan.
+Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla. Käyttäjä voi luoda ohjelman avulla yksinkertaisen verkkosivun ja tallentaa sen
 
 
 ## Dokumentaatio
-[Tuntikirjanpito](https://github.com/msha/ot-harjoitustyo/blob/master/dokumentaatio/tuntikirjanpito.md)
+ - [Tuntikirjanpito](./dokumentaatio/tuntikirjanpito.md)
 
-[Vaativuusmäärittely](https://github.com/msha/ot-harjoitustyo/blob/master/dokumentaatio/vaativuusmaarittely.md)
+- [Vaativuusmäärittely](./dokumentaatio/vaativuusmaarittely.md)
+
+## Ohjeet
+
+1. Ohjelman asennus onnistuu komennolla
+```bash
+poetry install
+```
+2. Ohjelma käynnistyy komennolla
+```bash
+poetry run invoke start
+```
+
+
+## Testaus
+
+Testit suoritetaan komennolla:
+
+```bash
+poetry run invoke test
+```
+
+### Testikattavuus
+
+Testikattavuusraportin voi generoida komennolla:
+
+```bash
+poetry run invoke coverage-report
+```
+
+Raportti generoituu _htmlcov_-hakemistoon.
+
+### Pylint
+
+Tiedoston [.pylintrc](./.pylintrc) määrittelemät tarkistukset voi suorittaa komennolla:
+
+```bash
+poetry run invoke lint
+```
