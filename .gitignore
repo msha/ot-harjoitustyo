@@ -1,5 +1,5 @@
 /laskarit/viikko2/unicafe/.pytest_cache
-./laskarit/viikko2/unicafe/src/tests/__pycache__/*
+/laskarit/viikko2/unicafe/src/tests/__pycache__/*
 /laskarit/viikko2/unicafe/.coverage
 /laskarit/viikko2/unicafe/htmlcov
 __pycache__*
@@ -11,3 +11,4 @@ htmlcov
 __pycache__/
 *.py[cod]
 *$py.class
+*.html

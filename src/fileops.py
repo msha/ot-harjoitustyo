@@ -1,6 +1,5 @@
 class Fileops:
 
     def savefile(self,name,content):
-        file = open(name, 'w')
-        file.write(content)
-        file.close()
+        with open(name, "w",encoding="utf-8") as file:
+            file.write(content)

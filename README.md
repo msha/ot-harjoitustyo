@@ -8,6 +8,8 @@ Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla
 
 - [Vaativuusmäärittely](./dokumentaatio/vaativuusmaarittely.md)
 
+- [Arkkitehtuurikuvaus](./dokumentaatio/arkkitehtuurikuvaus.md)
+
 ## Ohjeet
 
 1. Ohjelman asennus onnistuu komennolla
