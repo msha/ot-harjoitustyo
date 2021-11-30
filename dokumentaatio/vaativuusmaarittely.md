@@ -4,7 +4,7 @@
 Sovelluksen avulla käyttäjät voivat muodostaa html-koodia visuaalisen editorin avulla. Käyttäjät näkevät valmiin "nettisivun" -kaltaisen näkymän, jonka he voivat tallentaa html-muodossa esimerkiksi kotisivuilleen
 
 ## Suunnitellut toiminnallisuudet
-- Käyttäjä voi luoda uuden projektin  ✅
+- Käyttäjä voi luoda uuden projektin  -Tehty ✅
 - Käyttäjä voi lisätä projektiin eri html-elementtejä visuaalisen editorin avulla
     - \<a> tekstiä
     - \<img> kuvia
