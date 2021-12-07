@@ -21,7 +21,7 @@ WIP
 
 ### Kuvan lisääminen koodiin
 Käyttäjä painaa GUI:sta kuvanlisäysnappia, joka avaa käyttöliittymään uuden ikkunan kuvan lisäämistä varten. Ikkunasta käyttäjä voi joko syöttää suoraan polun käsin tai käyttää selausta toimintoa ja hakea kuvan hakemistoista. Ohjelma tämän jälkeen lisää kuvan näkymään ja sallii tiedoston tallentamisen
- 
+
 ![Rakenne](./kuvat/kuvan_lisaaminen.png)
 
 ## Tiedon tallennus
