@@ -6,10 +6,11 @@ Sovelluksen avulla käyttäjät voivat muodostaa html-koodia visuaalisen editori
 ## Suunnitellut toiminnallisuudet
 - Käyttäjä voi luoda uuden projektin  -Tehty ✅
 - Käyttäjä voi lisätä projektiin eri html-elementtejä visuaalisen editorin avulla
-    - \<a> tekstiä
-    - \<img> kuvia
+    - \<a> tekstiä -Tehty ✅
+    - \<img> kuvia -Tehty ✅
     - \<h1> otsikoita
-    - \<br> rivinvaihtoja
+    - \<img> kuvia -Tehty ✅
+    - \<br> rivinvaihtoja 
 - Käyttäjä voi editoida elementtejä
     - vaihtaa fonttia
      - vaihtaa kuvia
