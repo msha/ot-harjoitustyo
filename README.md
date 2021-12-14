@@ -13,6 +13,7 @@ Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla
 ## Releaset
 
 [Viikko 5](./releases/tag/v0.1.0)
+
 [Viikko 6](./releases/tag/v0.2.0)
 
 ## Ohjeet
