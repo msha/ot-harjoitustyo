@@ -10,6 +10,8 @@ Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla
 
 - [Arkkitehtuurikuvaus](./dokumentaatio/arkkitehtuurikuvaus.md)
 
+- [Käyttöohje](./dokumentaatio/kayttoohje.md)
+
 ## Releaset
 
 [Viikko 5](https://github.com/msha/ot-harjoitustyo/releases/tag/v0.1.0)
