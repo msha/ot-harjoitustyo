@@ -10,7 +10,7 @@ Sovelluksen avulla käyttäjät voivat muodostaa html-koodia visuaalisen editori
     - \<img> kuvia -Tehty ✅
     - \<h1> otsikoita
     - \<img> kuvia -Tehty ✅
-    - \<br> rivinvaihtoja 
+    - \<br> rivinvaihtoja -Tehty ✅
 - Käyttäjä voi editoida elementtejä
     - vaihtaa fonttia
      - vaihtaa kuvia

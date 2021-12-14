@@ -1,8 +1,8 @@
 from tkinter import Menu,Frame,PhotoImage,Button,Toplevel,Text,Tk,filedialog,RIGHT,BOTTOM,YES
 from tkinter.constants import TOP
-from tkhtmlview import HTMLLabel
-from codeops import Code
-from fileops import Fileops
+from tkhtmlview import HTMLLabel,HTMLScrolledText
+from logic.codeops import Code
+from logic.fileops import Fileops
 
 class Gui:
 
@@ -11,8 +11,8 @@ class Gui:
     self.root.geometry("1280x720")
     self.root.title("Editor")
 
-    self.code = Code()
-    self.htmlview = HTMLLabel(self.root, html=self.code)
+    self._code = Code()
+    self.htmlview = HTMLScrolledText(self.root, html=self._code)
     self.htmlview.configure(bg='white')
 
 
@@ -33,7 +33,7 @@ class Gui:
     self.root.config(menu=menubar)
 
   def save(self):
-    Fileops.savefile(self,"testi.html",self.code.read_code())
+    Fileops.savefile(self,"testi.html",self._code.read_code())
 
   def tools(self):
     '''Tool area in GUI'''
@@ -72,11 +72,11 @@ class Gui:
       height=12,
       width=40
     )
-    tekstin_syotto.insert('end',self.code.read_code())
+    tekstin_syotto.insert('end',self._code.read_code())
     tekstin_syotto.pack(expand=True)
 
     def close():
-      self.code.save_code(tekstin_syotto.get(1.0,'end'))
+      self._code.save_code(tekstin_syotto.get(1.0,'end'))
       window.destroy()
 
     save = Button(
@@ -100,7 +100,7 @@ class Gui:
       filepath.insert('end',file_path)
 
     def close():
-      self.code.insert_code('<img src='+filepath.get(1.0,'end')+'></img>')
+      self._code.insert_code('<img src='+filepath.get(1.0,'end')+'></img>')
       window.destroy()
 
     browse = Button(
@@ -117,15 +117,14 @@ class Gui:
 
   def html_area(self):
     '''Render of the work in progress HTML'''
-    self.htmlview.set_html(self.code.read_code(),True)
-    self.htmlview.after(10,self.html_area)
+    self.htmlview.set_html(self._code.read_code(),True)
 
   def on_key_press(self,event):
-    '''Listing to keyevents and converting them to inputs'''
+    '''Listing to keyevents and converting them into inputs'''
     if event.char == event.keysym:
-      Code.insert_code(event.char)
+      self._code.insert_code(event.char)
     else:
-      Code.move_pointer(event.keysym)
+      self._code.special_command(event.keysym)
 
 
   def start(self):
