@@ -1,7 +1,7 @@
 import unittest
 from codeops import Code
 
-class Testcodeops(unittest.TestCase):
+class TestCodeops(unittest.TestCase):
 
     def setUp(self):
         self.koodi = Code()

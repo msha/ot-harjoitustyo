@@ -10,6 +10,11 @@ Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla
 
 - [Arkkitehtuurikuvaus](./dokumentaatio/arkkitehtuurikuvaus.md)
 
+## Releaset
+
+[Viikko 5](./releases/tag/v0.1.0)
+[Viikko 6](./releases/tag/v0.2.0)
+
 ## Ohjeet
 
 1. Ohjelman asennus onnistuu komennolla
