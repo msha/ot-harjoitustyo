@@ -1,5 +1,5 @@
 import unittest
-from fileops import Fileops
+from logic.fileops import Fileops
 
 class Testfileops(unittest.TestCase):
     

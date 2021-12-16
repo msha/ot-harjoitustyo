@@ -1,5 +1,5 @@
 import unittest
-from codeops import Code
+from logic.codeops import Code
 
 class TestCodeops(unittest.TestCase):
 

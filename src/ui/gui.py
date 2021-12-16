@@ -1,5 +1,5 @@
-from tkinter import Menu,Frame,PhotoImage,Button,Toplevel,Text,Tk,filedialog,RIGHT,BOTTOM,YES
-from tkinter.constants import TOP
+from tkinter import Menu,Frame,PhotoImage,Button,Toplevel,Text,Tk,filedialog,RIGHT,BOTTOM,YES,font
+from tkinter.constants import INSERT, TOP
 from tkhtmlview import HTMLLabel,HTMLScrolledText
 from logic.codeops import Code
 from logic.fileops import Fileops
@@ -55,6 +55,10 @@ class Gui:
       button_frame,
       text ="Text",
       command = self.create_window_code)
+    text_tools = Button(
+      button_frame,
+      text ="Bold",
+      command = self.bold_it)
     text_tools.pack(side = RIGHT,expand=YES)
     add_image = Button(
       button_frame,
@@ -102,6 +106,7 @@ class Gui:
     def close():
       self._code.insert_code('<img src='+filepath.get(1.0,'end')+'></img>')
       window.destroy()
+      self.render_html_area()
 
     browse = Button(
       window,
@@ -115,22 +120,35 @@ class Gui:
     browse.pack(side=TOP,pady=20)
     save.pack(side = BOTTOM)
 
-  def html_area(self):
+  def bold_it(self):
+    bold_font = font.Font(self.root, self.htmlview.cget("font"))
+    bold_font.configure(weight="italic")
+
+    self.htmlview.tag_configure("bold", font=bold_font)
+    self.htmlview.tag_add("bold",1.0,'end')
+
+  def render_html_area(self):
     '''Render of the work in progress HTML'''
     self.htmlview.set_html(self._code.read_code(),True)
+    self.htmlview.mark_set("insert", self._code.get_cursor())
+    print(self.htmlview.get('1.0', 'end'))
 
   def on_key_press(self,event):
     '''Listing to keyevents and converting them into inputs'''
+    self._code.set_cursor(self.htmlview.index(INSERT))
+    self._code.save_code(self.htmlview.get(1.0,"end"))
     if event.char == event.keysym:
-      self._code.insert_code(event.char)
+      pass
     else:
       self._code.special_command(event.keysym)
+    self.render_html_area()
+    
 
 
   def start(self):
     self.menu()
     self.tools()
     self.htmlview.pack(fill="both", expand=True)
-    self.html_area()
+    self.render_html_area()
     self.root.bind('<KeyPress>', self.on_key_press)
     self.root.mainloop()
