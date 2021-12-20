@@ -1,5 +1,6 @@
-from tkinter import Menu,Frame,PhotoImage,Button,Toplevel,Text,Tk,filedialog,RIGHT,BOTTOM,YES,font
+from tkinter import * #Menu,Frame,PhotoImage,Button,Toplevel,Text,Tk,filedialog,RIGHT,BOTTOM,YES,font,Label
 from tkinter.constants import INSERT, TOP
+from tkinter import scrolledtext,font,filedialog
 from tkhtmlview import HTMLLabel,HTMLScrolledText
 from logic.codeops import Code
 from logic.fileops import Fileops
@@ -12,8 +13,25 @@ class Gui:
     self.root.title("Editor")
 
     self._code = Code()
-    self.htmlview = HTMLScrolledText(self.root, html=self._code)
+    self.htmlview = scrolledtext.ScrolledText(self.root)
     self.htmlview.configure(bg='white')
+
+    self.text_insert_position = self.htmlview.index('insert')
+    self.text_current_position = self.htmlview.index('current')
+    
+    self.debugview = Text(
+      self.root,
+      height=12,
+      width=40
+    )
+
+    self.codeview = Text(
+      self.root,
+      height=12,
+      width=40
+    )
+
+    self.status = Label(self.root, text = 'adsf',anchor=E) 
 
 
   def menu(self):
@@ -57,8 +75,8 @@ class Gui:
       command = self.create_window_code)
     text_tools = Button(
       button_frame,
-      text ="Bold",
-      command = self.bold_it)
+      text ="H1",
+      command = self.make_h1_tag)
     text_tools.pack(side = RIGHT,expand=YES)
     add_image = Button(
       button_frame,
@@ -103,8 +121,14 @@ class Gui:
         filetypes=[("Images","*.jpg *.png *.gif *.webp *.jpeg")],title='Choose a file')
       filepath.insert('end',file_path)
 
-    def close():
+    def close_window():
       self._code.insert_code('<img src='+filepath.get(1.0,'end')+'></img>')
+      
+      global img 
+      img = []
+      img.append(PhotoImage(file=filepath.get(1.0,'end-1c')))
+      
+      self.htmlview.image_create('insert',image=img[len(img)-1])
       window.destroy()
       self.render_html_area()
 
@@ -115,32 +139,55 @@ class Gui:
     save = Button(
       window,
       text ="Save",
-      command = close)
+      command = close_window)
     filepath.pack(side=TOP)
     browse.pack(side=TOP,pady=20)
     save.pack(side = BOTTOM)
+  
 
-  def bold_it(self):
-    bold_font = font.Font(self.root, self.htmlview.cget("font"))
-    bold_font.configure(weight="italic")
-
-    self.htmlview.tag_configure("bold", font=bold_font)
-    self.htmlview.tag_add("bold",1.0,'end')
+  def make_h1_tag(self):
+    h1_font = font.Font(size=36)
+    self.htmlview.tag_configure("h1", font=h1_font)
+    tags = self.htmlview.tag_names('sel.first')
+    if "h1" in tags:
+      self.htmlview.tag_remove("h1",'sel.first','sel.last')
+    else:
+      self.htmlview.tag_add("h1",'sel.first','sel.last')
 
   def render_html_area(self):
     '''Render of the work in progress HTML'''
-    self.htmlview.set_html(self._code.read_code(),True)
-    self.htmlview.mark_set("insert", self._code.get_cursor())
-    print(self.htmlview.get('1.0', 'end'))
+
+    self.debugview.delete(1.0,'end')
+    self.debugview.insert('end',self.htmlview.dump(1.0,'end'))
+
+    self.codeview.delete(1.0,'end')
+    self.codeview.insert('end',self._code.read_code())
+
+    
+    
+    self.status.config(text="cursor:"+str(self._code.get_cursor())+' , code:'+str(len(self._code.read_code()))+' , stripcode:'+str(self._code.codelen())+ ', html len:'+str(len(self.htmlview.get(1.0,'end-1c'))))
+  
 
   def on_key_press(self,event):
     '''Listing to keyevents and converting them into inputs'''
-    self._code.set_cursor(self.htmlview.index(INSERT))
-    self._code.save_code(self.htmlview.get(1.0,"end"))
-    if event.char == event.keysym:
-      pass
-    else:
-      self._code.special_command(event.keysym)
+    
+    print(event.keysym)
+    if event.keysym == 'Return':
+      
+      self.htmlview.insert('insert','\n')
+    
+    #save and move insert mark to the end of document temporarily to make parsing easier 
+    self.text_insert_position = self.htmlview.index('insert')
+    self.htmlview.mark_set('insert','end+1c')
+    self.htmlview.mark_set('current','end+1c')
+    self.htmlview.mark_unset('tk::anchor1')
+    self.htmlview.mark_unset('current')
+    self.htmlview.mark_unset('insert')
+    
+    self._code.save_code(self.htmlview.dump(1.0,'end-1c'))
+    
+    self.htmlview.mark_set('insert',self.text_insert_position)
+    self.htmlview.mark_set('current',self.text_current_position)
     self.render_html_area()
     
 
@@ -150,5 +197,8 @@ class Gui:
     self.tools()
     self.htmlview.pack(fill="both", expand=True)
     self.render_html_area()
+    self.debugview.pack(fill="both", expand=True)
+    self.codeview.pack(fill="both", expand=True)
+    self.status.pack(fill="both", side=BOTTOM, expand=True)
     self.root.bind('<KeyPress>', self.on_key_press)
     self.root.mainloop()
