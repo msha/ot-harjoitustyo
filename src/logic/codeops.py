@@ -1,10 +1,9 @@
-from tkinter import font
 import re
 
 class Code:
     '''Handles behind the scenes code manipulations
     so that actions are interpreted as they should'''
-    def __init__(self,code = '''<h1>otsikko</h1></br><a>testi</a></br><p>asdf</p><h2>alaotsikko</h2><a>viimeinen</a>'''):
+    def __init__(self,code = '<a>testi</a>'):
         self._code = code
         self.currenttag = ''
         self.htmlview_cursor_location = 1.1
@@ -17,10 +16,15 @@ class Code:
         self._code = ''
         for (key, value, index) in new_code:
             print(key+'  : '+value+' : '+index)
-            if key == "text" and (value=='\n' or value =='\r' or value =='\r\n'):
+            if key == "tagon":
+                self._code += "<{}>".format(value)
+            elif key == "tagoff":
+                self._code += "</{}>".format(value)
+            elif key == "text" and value in('\\n','\\r','\\r\\n'):
                 self._code += '<br>'
-            elif key == "text" and len(value) > 0 and value is not ' ':
+            elif key == "text" and len(value) > 0 and value != ' ':
                 self._code += '<a>'+value+'</a>'
+            
 
     def insert_code(self,new_code):
         self._code += new_code

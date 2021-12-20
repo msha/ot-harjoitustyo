@@ -14,7 +14,7 @@ class Gui:
 
     self._code = Code()
     self.htmlview = scrolledtext.ScrolledText(self.root)
-    self.htmlview.configure(bg='white')
+    self.htmlview.configure(bg='white',undo=True)
 
     self.text_insert_position = self.htmlview.index('insert')
     self.text_current_position = self.htmlview.index('current')
@@ -39,13 +39,13 @@ class Gui:
 
     menubar = Menu(self.root)
     filemenu = Menu(menubar, tearoff=0)
-    filemenu.add_command(label="New", command='')
-    filemenu.add_command(label="Save", command= self.save)
-    filemenu.add_command(label="Save as", command= self.save)
+    filemenu.add_command(label="New", command='', accelerator="(Ctrl+N)")
+    filemenu.add_command(label="Save", command= self.save, accelerator="(Ctrl+S)")
+    filemenu.add_command(label="Save as", command= self.save, accelerator="(Ctrl+Shift+S)")
 
     filemenu.add_separator()
 
-    filemenu.add_command(label="Exit", command=self.root.quit)
+    filemenu.add_command(label="Exit", command=lambda:self.root.quit, accelerator="(Ctrl+Q)")
     menubar.add_cascade(label="File", menu=filemenu)
 
     self.root.config(menu=menubar)
@@ -77,6 +77,16 @@ class Gui:
       button_frame,
       text ="H1",
       command = self.make_h1_tag)
+    redo_button = Button(
+      button_frame,
+      text ="Redo",
+      command = self.htmlview.edit_redo)
+    redo_button.pack(side=LEFT,expand=YES)
+    undo_button = Button(
+      button_frame,
+      text ="Undo",
+      command = self.htmlview.edit_undo)
+    undo_button.pack(side=LEFT)
     text_tools.pack(side = RIGHT,expand=YES)
     add_image = Button(
       button_frame,
@@ -171,7 +181,7 @@ class Gui:
   def on_key_press(self,event):
     '''Listing to keyevents and converting them into inputs'''
     
-    print(event.keysym)
+    #print(event.keysym)
     if event.keysym == 'Return':
       
       self.htmlview.insert('insert','\n')
