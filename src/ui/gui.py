@@ -49,11 +49,6 @@ class Gui:
         self.text_insert_position = self.htmlview.index('insert')
         self.text_current_position = self.htmlview.index('current')
         
-        self.debugview = Text(
-            self.root,
-            height=6,
-            width=40
-        )
         global images
         images = []
 
@@ -304,14 +299,6 @@ class Gui:
         color = askcolor(title="Choose the background color")
         self.htmlview.configure(bg=color[1])
         self._code.bg_color = color
-    
-    def changefont(self,):
-        value = self.current_tag
-        if value == 'Heading 1':
-            self.make_h1_tag()
-        else:
-            print('öööö')
-        self.render_html_area()
 
     def make_h1_tag(self):
         self.make_tag('h1')
@@ -353,9 +340,6 @@ class Gui:
     def render_html_area(self):
         '''Render of the work in progress HTML'''
 
-        self.debugview.delete(1.0,'end')
-        self.debugview.insert('end',self.htmlview.dump(1.0,'end', tag=True, text=True))
-
         if self.code_visible:
             self.codeview.pack(fill="both", expand=True)
             self.codeview.delete(1.0,'end')
@@ -378,7 +362,6 @@ class Gui:
     dirty_fix_for_double_br = False
     def on_key_press(self,event):
         '''Listing to keyevents and converting them into inputs'''
-        print(str(event.state)+' '+event.keysym+' '+event.char)
         if event.keysym == 'Return':
             if self.dirty_fix_for_double_br:
                 self.dirty_fix_for_double_br = False
@@ -418,7 +401,6 @@ class Gui:
         self.tools()
         self.htmlview.pack(fill="both", expand=True)
         self.render_html_area()
-        
         self.status_bar.pack(side='bottom',fill='both')
         self.status_right.pack(side='right', expand=True,anchor='e')
         self.status_left.pack(fill="both", expand=True,anchor='w')

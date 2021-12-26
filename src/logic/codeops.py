@@ -62,7 +62,6 @@ class Code:
     def save_code(self,new_code,title):
         self._code = ''
         for (key, value, index) in new_code:
-            #print(key+'  : '+value+' : '+index)
             if key == "tagon" and value in self.validtags:
                 self._code += f"<{value}>"
             elif key == "tagoff" and value in self.validtags:

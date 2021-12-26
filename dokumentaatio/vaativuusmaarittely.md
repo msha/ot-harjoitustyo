@@ -11,10 +11,12 @@ Sovelluksen avulla käyttäjät voivat muodostaa html-koodia visuaalisen editori
     - \<h1> otsikoita -Tehty ✅
     - \<br> rivinvaihtoja -Tehty ✅
 - Käyttäjä voi editoida elementtejä
-    - vaihtaa fonttia
-     - vaihtaa kuvia
+    - vaihtaa fonttia -Tehty ✅
+     - vaihtaa kuvia -Tehty ✅
 - Käyttäjä voi poistaa elementtejä -Tehty ✅
-- Käyttäjä voi tallentaa projektin html-koodina -Tehty ✅
+- Käyttäjä voi tallentaa projektin html-koodina -Tehty ✅ 
+- Käyttäjä voi avata projektin html-koodista -Tehty ✅ (ei toimi täysin oikein aina, mutta olemassa)
+- Käyttäjä näkee viimeisimmät tallennetut tiedostot -Tehty ✅ 
 - Käyttäjä voi sulkea ohjelman -Tehty ✅
 ## Jatkokehitysideoita (toteutetaan jos aikaa on)
-- Projektien tallentaminen omassa formaatissa jatkokäsittelyä(load/save) varten
+- Projektien tallentaminen omassa formaatissa jatkokäsittelyä(load/save) varten 
