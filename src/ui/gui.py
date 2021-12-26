@@ -1,7 +1,7 @@
 from tkinter import * #Menu,Frame,PhotoImage,Button,Toplevel,Text,Tk,filedialog,RIGHT,BOTTOM,YES,font,Label
 from tkinter.constants import INSERT, TOP
 from tkinter import scrolledtext,font,filedialog
-from tkhtmlview import HTMLLabel,HTMLScrolledText
+from PIL import Image,ImageTk
 from logic.codeops import Code
 from logic.fileops import Fileops
 
@@ -10,9 +10,11 @@ class Gui:
   def __init__(self):
     self.root = Tk()
     self.root.geometry("1280x720")
-    self.root.title("Editor")
+    self.working_document = 'untitled'
+    self.root.title("Editor - "+self.working_document)
 
     self._code = Code()
+    self._file = Fileops()
     self.htmlview = scrolledtext.ScrolledText(self.root)
     self.htmlview.configure(bg='white',undo=True)
 
@@ -21,27 +23,38 @@ class Gui:
     
     self.debugview = Text(
       self.root,
-      height=12,
+      height=6,
       width=40
     )
+    global images
+    images = []
 
     self.codeview = Text(
       self.root,
-      height=12,
+      height=6,
       width=40
     )
 
-    self.status = Label(self.root, text = 'adsf',anchor=E) 
+    #fonts
+    h1_font = font.Font(size=36)
+    self.htmlview.tag_configure("h1", font=h1_font)
 
+    self.status_bar = Frame(self.root)
+    self.status_right = Label(self.status_bar, text = 'adsf',anchor=E) 
+    self.status_left = Label(self.status_bar, text = 'adsf',anchor=W) 
+    
 
   def menu(self):
     '''Top menu in GUI'''
 
     menubar = Menu(self.root)
     filemenu = Menu(menubar, tearoff=0)
-    filemenu.add_command(label="New", command='', accelerator="(Ctrl+N)")
-    filemenu.add_command(label="Save", command= self.save, accelerator="(Ctrl+S)")
-    filemenu.add_command(label="Save as", command= self.save, accelerator="(Ctrl+Shift+S)")
+    filemenu.add_command(label="New", command=self.new_document, accelerator="(Ctrl+N)")
+    filemenu.add_command(label="Open", command=self.open_document, accelerator="(Ctrl+O)")
+    filemenu.add_command(label="Save", command='', accelerator="(Ctrl+S)")
+    filemenu.add_command(label="Save as", command='', accelerator="(Ctrl+Shift+S)")
+    filemenu.add_command(label="Export", command= self.export_to_file, accelerator="(Ctrl+E)")
+    filemenu.add_command(label="Export as", command= self.export_to_file, accelerator="(Ctrl+E)")
 
     filemenu.add_separator()
 
@@ -50,8 +63,25 @@ class Gui:
 
     self.root.config(menu=menubar)
 
-  def save(self):
-    Fileops.savefile(self,"testi.html",self._code.read_code())
+  def export_to_file(self):
+    Fileops.savefile("testi.html",self._code.read_code())
+
+  def new_document(self):
+    self.htmlview.delete(1.0,'end')
+    self.render_html_area()
+  
+  def open_document(self):
+    try:
+      file_to_open = self._file.openfile(filedialog.askopenfilename(
+          filetypes=[("Images","*.html")],title='Choose a file'))
+      raw_html = self._code.parse_code(file_to_open)
+      self.working_document = self._file.working_file
+      self.htmlview.delete(1.0,'end')
+      for key,value in raw_html:
+        self.htmlview.insert("end",key,value)
+      self.render_html_area()
+    except IOError:
+      print("failed to open file")
 
   def tools(self):
     '''Tool area in GUI'''
@@ -127,18 +157,17 @@ class Gui:
       width=40
     )
     def open_file():
+      filepath.delete(1.0,'end')
       file_path = filedialog.askopenfilename(parent=window,
         filetypes=[("Images","*.jpg *.png *.gif *.webp *.jpeg")],title='Choose a file')
       filepath.insert('end',file_path)
 
     def close_window():
-      self._code.insert_code('<img src='+filepath.get(1.0,'end')+'></img>')
       
-      global img 
-      img = []
-      img.append(PhotoImage(file=filepath.get(1.0,'end-1c')))
+      images.append(ImageTk.PhotoImage(file=filepath.get(1.0,'end-1c')))
+      self._code.imagepaths['pyimage'+str(len(images)+1)] = filepath.get(1.0,'end-1c')
       
-      self.htmlview.image_create('insert',image=img[len(img)-1])
+      self.htmlview.image_create('insert',image=images[len(images)-1])
       window.destroy()
       self.render_html_area()
 
@@ -156,35 +185,62 @@ class Gui:
   
 
   def make_h1_tag(self):
-    h1_font = font.Font(size=36)
-    self.htmlview.tag_configure("h1", font=h1_font)
     tags = self.htmlview.tag_names('sel.first')
     if "h1" in tags:
       self.htmlview.tag_remove("h1",'sel.first','sel.last')
     else:
       self.htmlview.tag_add("h1",'sel.first','sel.last')
+    
+    self._code.save_code(self.htmlview.dump(1.0,'end-1c'))
+    self.render_html_area()
+    
 
   def render_html_area(self):
     '''Render of the work in progress HTML'''
 
     self.debugview.delete(1.0,'end')
-    self.debugview.insert('end',self.htmlview.dump(1.0,'end'))
+    self.debugview.insert('end',self.htmlview.dump(1.0,'end', tag=True, text=True))
 
     self.codeview.delete(1.0,'end')
     self.codeview.insert('end',self._code.read_code())
 
-    
-    
-    self.status.config(text="cursor:"+str(self._code.get_cursor())+' , code:'+str(len(self._code.read_code()))+' , stripcode:'+str(self._code.codelen())+ ', html len:'+str(len(self.htmlview.get(1.0,'end-1c'))))
-  
+    self.status_right.config(text='code:'+str(len(self._code.read_code()))+' , stripcode:'+str(self._code.codelen())+ ', html len:'+str(len(self.htmlview.get(1.0,'end-1c'))))
+    curtags = self.htmlview.tag_names('insert')
+    tagstring = ''
+    for tag in curtags:
+      tagstring += '<'+tag+'>'
+    if not curtags:
+      tagstring = '<a>'
+    self.status_left.config(text='%s'%tagstring)
+    self._code.save_code(self.htmlview.dump(1.0,'end-1c'))
+    self.root.title("Editor - "+self.working_document)
 
+  dirty_fix_for_double_br = False
   def on_key_press(self,event):
     '''Listing to keyevents and converting them into inputs'''
-    
-    #print(event.keysym)
+    print(str(event.state)+' '+event.keysym)
     if event.keysym == 'Return':
-      
-      self.htmlview.insert('insert','\n')
+      if self.dirty_fix_for_double_br:
+        self.dirty_fix_for_double_br = False
+        self.htmlview.insert('insert','\n')
+      else:
+        self.dirty_fix_for_double_br = True
+    #state 4 = ctrl
+    elif event.state == 4:
+      if event.keysym == 's':
+        self.export_to_file()
+      if event.keysym == 'n':
+        self.new_document()
+      if event.keysym == 'o':
+        self.open_document_from_database()
+      if event.keysym == 'e':
+        self.export_to_file()
+    # state 5 = ctrl + shift
+    elif event.state == 5:
+      if event.keysym == 's':
+        pass
+      if event.keysym == 'e':
+        pass
     
     #save and move insert mark to the end of document temporarily to make parsing easier 
     self.text_insert_position = self.htmlview.index('insert')
@@ -194,13 +250,11 @@ class Gui:
     self.htmlview.mark_unset('current')
     self.htmlview.mark_unset('insert')
     
-    self._code.save_code(self.htmlview.dump(1.0,'end-1c'))
-    
     self.htmlview.mark_set('insert',self.text_insert_position)
     self.htmlview.mark_set('current',self.text_current_position)
     self.render_html_area()
     
-
+  
 
   def start(self):
     self.menu()
@@ -209,6 +263,8 @@ class Gui:
     self.render_html_area()
     self.debugview.pack(fill="both", expand=True)
     self.codeview.pack(fill="both", expand=True)
-    self.status.pack(fill="both", side=BOTTOM, expand=True)
+    self.status_bar.pack(fill='both')
+    self.status_right.pack(side='right', expand=True,anchor='e')
+    self.status_left.pack(fill="both", expand=True,anchor='w')
     self.root.bind('<KeyPress>', self.on_key_press)
     self.root.mainloop()
