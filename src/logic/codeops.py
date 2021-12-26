@@ -59,7 +59,9 @@ class Code:
         parser.feed(data)
         return parser.palautus
 
-    def save_code(self,new_code,title):
+    def save_code(self,new_code,title:str):
+        '''Parse code to a html format from tkinter text box
+        adds proper boiler and variables such as title and background color'''
         self._code = ''
         for (key, value, index) in new_code:
             if key == "tagon" and value in self.validtags:
@@ -84,5 +86,6 @@ class Code:
             bg_color = self.bg_color,fg_color = self.fg_color)
 
     def codelen(self):
+        '''returns length of code without tags'''
         regex = re.compile(r'<.*?>')
         return len(regex.sub('',self._code))+self._code.count('/')

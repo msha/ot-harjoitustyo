@@ -114,6 +114,8 @@ class Gui:
         self.root.config(menu=menubar)
 
     def export_to_file(self):
+        '''Save document to a file
+        if file has not been previously saved, jumps to export_to_file_and_ask_filename'''
         if self.working_document != 'untitled':
             self._file.savefile(self.working_document_path,self._code.read_code())
         else:
@@ -122,6 +124,7 @@ class Gui:
         self.menu()
 
     def export_to_file_and_ask_filename(self):
+        '''Asks for a filename and saves document to a given file'''
         self._file.savefile(filedialog.asksaveasfilename(
         filetypes=[("Html documents","*.html")],title="Choose a filename"
         ),self._code.read_code())
@@ -131,10 +134,17 @@ class Gui:
         self.menu()
 
     def new_document(self):
+        '''Cleansup the current document and start a new'''
         self.htmlview.delete(1.0,'end')
+        self._code._code = ''
+        self._code.imagepaths = []
+        self._file.working_file = ''
+        self._file.working_file_path = ''
+        self.working_document_path = ''
         self.render_html_area()
     
     def open_document(self,file_to_open=''):
+        '''Opens up a HTML for formatting '''
         if file_to_open == '':
             try:
                 file_to_open = self._file.openfile(filedialog.askopenfilename(
@@ -359,6 +369,7 @@ class Gui:
         self._code.save_code(self.htmlview.dump(1.0,'end-1c'),self._file.working_file)
         self.root.title("Editor - "+self.working_document)
 
+    #doesn't even work btw :D
     dirty_fix_for_double_br = False
     def on_key_press(self,event):
         '''Listing to keyevents and converting them into inputs'''

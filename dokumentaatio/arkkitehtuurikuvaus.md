@@ -24,3 +24,7 @@ Käyttäjä painaa GUI:sta kuvanlisäysnappia, joka avaa käyttöliittymään uu
 ## Tiedon tallennus
 
 Sovellus käyttää `fileops` luokkaa tietojen tallentamiseen. Sovellus muodostaa käyttäjän haluamalla nimellä html-tiedoston työstettävästä sisällöstä.
+
+## Tiedon luku
+
+Sovellus käyttää `fileops` luokkaa myös tietojen lukemiseen. Sovellus hakee käyttäjän määrittämän tiedoston ja parsii siitä työstettävän pohjan muokattavaksi
