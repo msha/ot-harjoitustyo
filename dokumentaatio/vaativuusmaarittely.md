@@ -7,8 +7,13 @@ Sovelluksen avulla käyttäjät voivat muodostaa html-koodia visuaalisen editori
 - Käyttäjä voi luoda uuden projektin  -Tehty ✅
 - Käyttäjä voi lisätä projektiin eri html-elementtejä visuaalisen editorin avulla
     - \<a> tekstiä -Tehty ✅
+    - \<em> kursivoituatekstiä -Tehty ✅
+    - \<strong> lihavoituatekstiä -Tehty ✅
     - \<img> kuvia -Tehty ✅
     - \<h1> otsikoita -Tehty ✅
+    - \<h2> otsikoita -Tehty ✅
+    - \<h3> otsikoita -Tehty ✅
+    - \<h4> otsikoita -Tehty ✅
     - \<br> rivinvaihtoja -Tehty ✅
 - Käyttäjä voi editoida elementtejä
     - vaihtaa fonttia -Tehty ✅
