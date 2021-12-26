@@ -1,5 +1,7 @@
 # WYSIWYG Editori
 
+![kuva](./dokumentaatio/kuvat/screenshot.png)
+
 Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla. Käyttäjä voi luoda ohjelman avulla yksinkertaisen verkkosivun ja tallentaa sen
 
 

@@ -1,11 +1,12 @@
 import re
-from bs4 import BeautifulSoup
 from html.parser import HTMLParser
+from string import Template
+from bs4 import BeautifulSoup
 
 class HMTLParse(HTMLParser):
     palautus = []
     _tag = ''
-    def handle_starttag(self, tag, attr):
+    def handle_starttag(self, tag, attrs):
         self._tag = tag
 
     def handle_endtag(self, tag):
@@ -28,19 +29,37 @@ class Code:
         self.imagepaths = {}
         self.validtags = ['br','a','h1','img','p','h2','h3','h4','strong','em','ul','ol']
         self.bg_color = '#2A2A2A'
-        self.fg_color = '##DCDCAA'
+        self.fg_color = '#DCDCAA'
+        self.boiler = Template('''<!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <title>$title</title>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                            <style>
+                                body {  background-color: $bg_color;
+                                        color: $fg_color
+                                    }
+                            </style>
+                        </head>
+                        <body>
+                            $content
+                        </body>
+                        </html>''')
     def read_code(self):
         return BeautifulSoup(self._code,features="html.parser").prettify()
 
 
     def parse_code(self,code_to_parse):
-        data = re.sub(r"<.*?a>|<.?html>|<.?body>|[ \t]|[\r\n]","",code_to_parse)
+        data = re.sub(r"<.*?a>|<.?html>|<.?body>|[ \t]|[\r\n]|<html.*>(.|\n)*?<\/head>"
+            ,"",code_to_parse)
         parser = HMTLParse()
         parser.palautus = []
         parser.feed(data)
         return parser.palautus
 
-    def save_code(self,new_code):
+    def save_code(self,new_code,title):
         self._code = ''
         for (key, value, index) in new_code:
             #print(key+'  : '+value+' : '+index)
@@ -48,36 +67,23 @@ class Code:
                 self._code += f"<{value}>"
             elif key == "tagoff" and value in self.validtags:
                 self._code += f"</{value}>"
+            elif key == "tagon" and value == 'justify-center':
+                self._code += '<p style="text-align:center;">'
+            elif key == "tagoff" and value == 'justify-center':
+                self._code += '</p>'
+            elif key == "tagon" and value == 'justify-right':
+                self._code += '<p style="text-align:right;">'
+            elif key == "tagoff" and value == 'justify-right':
+                self._code += '</p>'
             elif key == "image":
                 self._code += f'<img src="{self.imagepaths[value]}"></img>'
             elif key == "text" and value in('\n'):
                 self._code += '<br />'
             elif key == "text" and len(value) > 0 and value != ' ':
                 self._code += f'<a>{value}</a>'
-
-    def insert_code(self,new_code):
-        self._code += new_code
+        self._code = self.boiler.substitute(title=title,content=self._code,
+            bg_color = self.bg_color,fg_color = self.fg_color)
 
     def codelen(self):
         regex = re.compile(r'<.*?>')
         return len(regex.sub('',self._code))+self._code.count('/')
-
-
-    def special_command(self,event):
-        '''Read special characters and convert them into an appropriate action'''
-        def backspace():
-            pass
-
-        def enter():
-            self.insert_code('</br>')
-
-        def space():
-            self.insert_code(' ')
-
-        command={
-            'BackSpace': backspace,
-            'Return': enter,
-            'space': space
-        }
-        if event in command:
-            command.get(event)()

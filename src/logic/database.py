@@ -14,22 +14,21 @@ class Database:
             print(err)
 
     def create_table_files(self):
-        self._cursor.execute("""CREATE TABLE files 
-                            (id INTEGER PRIMARY KEY, path TEXT, modified DATETIME DEFAULT CURRENT_TIMESTAMP)""")
+        self._cursor.execute("""CREATE TABLE files
+                            (id INTEGER PRIMARY KEY,
+                            path TEXT, modified DATETIME DEFAULT CURRENT_TIMESTAMP)""")
         self.current_db.commit()
 
     def insert_record(self,filename):
         self._cursor.execute(f"""INSERT INTO files(path)
                                 VALUES('{filename}')""")
         self.current_db.commit()
-    
+
     def get_recent(self):
         '''returns 5 latest filepaths inserted to the database'''
-        self._cursor.execute("""SELECT path 
-                                FROM files 
+        self._cursor.execute("""SELECT path
+                                FROM files
                                 ORDER BY modified DESC
                                 LIMIT 5""")
 
         return self._cursor.fetchall()
-
-    

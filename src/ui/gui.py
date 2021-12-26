@@ -16,7 +16,7 @@ class CoolButton(tkinter.Button):
         self.bind("<Leave>", self.on_leave)
 
     def on_enter(self, e):
-        self.configure(bg='#0E0E0E',fg='#BED6FF',activebackground="#0E0E0E",activeforeground="#D9E577")
+        self.configure(bg='#0E0E0E',fg='#BED6FF',activebackground="#2d2d2d",activeforeground="#D9E577")
 
     def on_leave(self, e):
         self.configure(bg='#0E0E0E',fg='#BED6FF')
@@ -36,7 +36,8 @@ class Gui:
         self.working_document = 'untitled'
         self.working_document_path = ''
         self.root.title("Editor - "+self.working_document)
-        self.root.configure(bg=self.theme_bg)
+        self.root.configure(bg=self.theme_bg,borderwidth = 1)
+        self.code_visible = False
 
         self.current_tag = 'normal'
         self._code = Code()
@@ -59,7 +60,9 @@ class Gui:
         self.codeview = Text(
             self.root,
             height=6,
-            width=40
+            width=40,
+            bg=self.theme_bg_def,
+            fg="#EFC090"
         )
 
         #fonts
@@ -101,10 +104,17 @@ class Gui:
 
         filemenu.add_command(label="Exit", command=self.close_program, accelerator="(Ctrl+Q)",activebackground=self.theme_bg,activeforeground=self.theme_activefg)
         menubar.add_cascade(label="File", menu=filemenu,activebackground=self.theme_bg,activeforeground=self.theme_activefg)
+        
         editmenu = Menu(menubar, tearoff=0,bg=self.theme_bg,fg=self.theme_fcolor)
         editmenu.add_command(label="Undo", command=self.htmlview.edit_undo, accelerator="(Ctrl+Z)",activebackground=self.theme_bg,activeforeground=self.theme_activefg)
         editmenu.add_command(label="Redo", command=self.htmlview.edit_redo, accelerator="(Ctrl+Shift+Z)",activebackground=self.theme_bg,activeforeground=self.theme_activefg)
+        
         menubar.add_cascade(label="Edit", menu=editmenu,activebackground=self.theme_bg,activeforeground=self.theme_activefg)
+
+        viewmenu = Menu(menubar, tearoff=0,bg=self.theme_bg,fg=self.theme_fcolor)
+        viewmenu.add_command(label="View HTML", command=self.view_code,activebackground=self.theme_bg,activeforeground=self.theme_activefg)
+
+        menubar.add_cascade(label="View", menu=viewmenu,activebackground=self.theme_bg,activeforeground=self.theme_activefg)
 
         self.root.config(menu=menubar)
 
@@ -232,7 +242,7 @@ class Gui:
         tekstin_syotto.pack(expand=True)
 
         def close():
-            self._code.save_code(tekstin_syotto.get(1.0,'end'))
+            self._code.save_code(tekstin_syotto.get(1.0,'end'),self._file.working_file)
             window.destroy()
 
         save = CoolButton(
@@ -245,11 +255,13 @@ class Gui:
     def create_window_image(self):
         ''''Window for adding images'''
         window = Toplevel(self.root)
-        window.geometry("450x250")
+        window.geometry("350x100")
+        window.configure(bg=self.theme_bg)
         filepath = Text(
             window,
             height=1,
-            width=40
+            width=40,
+            bg=self.theme_bg_def,fg=self.theme_activefg
         )
         def open_file():
             filepath.delete(1.0,'end')
@@ -277,8 +289,13 @@ class Gui:
             command = close_window
         )
         filepath.pack(side=TOP)
-        browse.pack(side=TOP,pady=20)
-        save.pack(side = BOTTOM)
+        browse.pack(side = LEFT)
+        save.pack(side = RIGHT)
+
+    def view_code(self):
+        '''View/Hide realtime HTML view at the bottom'''
+        self.code_visible = not self.code_visible
+        self.render_html_area()
     
     def close_program(self):
         self.root.destroy()
@@ -327,7 +344,7 @@ class Gui:
         else:
             self.htmlview.tag_add(tag,'sel.first','sel.last')
         
-        self._code.save_code(self.htmlview.dump(1.0,'end-1c'))
+        self._code.save_code(self.htmlview.dump(1.0,'end-1c'),self._file.working_file)
         self.render_html_area()
     
 
@@ -339,8 +356,13 @@ class Gui:
         self.debugview.delete(1.0,'end')
         self.debugview.insert('end',self.htmlview.dump(1.0,'end', tag=True, text=True))
 
-        self.codeview.delete(1.0,'end')
-        self.codeview.insert('end',self._code.read_code())
+        if self.code_visible:
+            self.codeview.pack(fill="both", expand=True)
+            self.codeview.delete(1.0,'end')
+            self.codeview.insert('end',self._code.read_code())
+            self.codeview.see('end')
+        else:
+            self.codeview.pack_forget()
 
         self.status_right.config(text='code:'+str(len(self._code.read_code()))+' , stripcode:'+str(self._code.codelen())+ ', html len:'+str(len(self.htmlview.get(1.0,'end-1c'))))
         curtags = self.htmlview.tag_names('insert')
@@ -350,7 +372,7 @@ class Gui:
         if not curtags:
             tagstring = '<a>'
         self.status_left.config(text='%s'%tagstring)
-        self._code.save_code(self.htmlview.dump(1.0,'end-1c'))
+        self._code.save_code(self.htmlview.dump(1.0,'end-1c'),self._file.working_file)
         self.root.title("Editor - "+self.working_document)
 
     dirty_fix_for_double_br = False
@@ -396,9 +418,8 @@ class Gui:
         self.tools()
         self.htmlview.pack(fill="both", expand=True)
         self.render_html_area()
-        self.debugview.pack(fill="both", expand=True)
-        self.codeview.pack(fill="both", expand=True)
-        self.status_bar.pack(fill='both')
+        
+        self.status_bar.pack(side='bottom',fill='both')
         self.status_right.pack(side='right', expand=True,anchor='e')
         self.status_left.pack(fill="both", expand=True,anchor='w')
         self.root.bind('<KeyPress>', self.on_key_press)

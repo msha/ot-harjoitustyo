@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ot-harjoitustyo"
-version = "0.1.0"
+version = "1.0.0"
 description = "WYSIWYG Editori Python"
 authors = ["Lauri <1960498+msha@users.noreply.github.com>"]
 

@@ -7,7 +7,7 @@ class Fileops:
     def __init__(self):
         self.working_file = 'untitled'
         self.working_file_path = ''
-        self.db = Database()
+        self._database = Database()
 
     def savefile(self,name,content):
         '''save file and insert filelocation to database'''
@@ -15,7 +15,7 @@ class Fileops:
             self.working_file = os.path.basename(name)
             self.working_file_path = name
             file.write(content)
-            self.db.insert_record(name)
+            self._database.insert_record(name)
 
     def openfile(self,name):
         '''returns content of a local file as a string'''

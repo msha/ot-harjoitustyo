@@ -2,7 +2,7 @@
 
 ## Rakenne
 
-Ohjelma käyttää _gui_ pakkausta käyttöliittymän toteuttamiseen, _code_ sisältää sisäisen logiikan ja _fileops_ tiedon tallentamiseen liittyvät asiat.
+Ohjelma käyttää `gui` pakkausta käyttöliittymän toteuttamiseen, `code` sisältää koodin käsittelyyn sisältyvän logiikan, `fileops` tiedon tallentamiseen sekä lukemiseen liittyvät asiat ja database sisältää tietokannan käsittelyn.
 
 ![Rakenne](./kuvat/sovellus.png)
 
