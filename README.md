@@ -21,6 +21,7 @@ Sovelluksen avulla käyttäjä voi luoda HTML-koodia visuaalisen editorin avulla
 [Viikko 5](https://github.com/msha/ot-harjoitustyo/releases/tag/v0.1.0)
 
 [Viikko 6](https://github.com/msha/ot-harjoitustyo/releases/tag/v0.2.0)
+
 [loppupalautus](https://github.com/msha/ot-harjoitustyo/releases/tag/v1.0.0)
 
 ## Ohjeet
