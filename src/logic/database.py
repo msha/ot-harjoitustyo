@@ -19,12 +19,12 @@ class Database:
         self.current_db.commit()
 
     def insert_record(self,filename):
-        print("kirjoitan")
         self._cursor.execute(f"""INSERT INTO files(path)
                                 VALUES('{filename}')""")
         self.current_db.commit()
     
     def get_recent(self):
+        '''returns 5 latest filepaths inserted to the database'''
         self._cursor.execute("""SELECT path 
                                 FROM files 
                                 ORDER BY modified DESC

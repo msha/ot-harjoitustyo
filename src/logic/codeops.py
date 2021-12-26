@@ -27,7 +27,8 @@ class Code:
         self._code = code
         self.imagepaths = {}
         self.validtags = ['br','a','h1','img','p','h2','h3','h4','strong','em','ul','ol']
-
+        self.bg_color = '#2A2A2A'
+        self.fg_color = '##DCDCAA'
     def read_code(self):
         return BeautifulSoup(self._code,features="html.parser").prettify()
 
@@ -42,7 +43,7 @@ class Code:
     def save_code(self,new_code):
         self._code = ''
         for (key, value, index) in new_code:
-            print(key+'  : '+value+' : '+index)
+            #print(key+'  : '+value+' : '+index)
             if key == "tagon" and value in self.validtags:
                 self._code += f"<{value}>"
             elif key == "tagoff" and value in self.validtags:
